@@ -15,23 +15,36 @@ class ClockMMU(MMU):
         self.clock_tip = 0
         self.count_diskR= 0
         self.count_diskW=0
-        pass
+        self.count_page_faults=0
+        self.debug_mode=False
+        self.total_frames= frames
 
     def set_debug(self):
-        # TODO: Implement the method to set debug mode
-        pass
+        self.debug_mode = True
 
     def reset_debug(self):
-        # TODO: Implement the method to reset debug mode
+        self.debug_mode = False
+    
+    def clock (self,page_number):
         pass
 
     def read_memory(self, page_number):
-        # TODO: Implement the method to read memory
-        pass
+
+        for page in self.frames:
+            if page and page.page_num == page_number: 
+                    page.ref_bit==1
+                    if self.debug_mode:
+                        print("Read hit")
+                    return
+            
+        self.clock(page_number)
+
 
     def write_memory(self, page_number):
         # TODO: Implement the method to write memory
         pass
+
+
 
     def get_total_disk_reads(self):
         # TODO: Implement the method to get total disk reads
