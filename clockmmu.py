@@ -1,9 +1,20 @@
 from mmu import MMU
 
+class page:
+    def __init__(self,page_num):
+        self.page_num = page_num
+        self.ref_bit =0
+
+    def __repr__(self):
+        return f"Page({self.page_number}, ref_bit={self.reference_bit})"
+
 
 class ClockMMU(MMU):
     def __init__(self, frames):
-        # TODO: Constructor logic for EscMMU
+        self.frames= [None]* frames
+        self.clock_tip = 0
+        self.count_diskR= 0
+        self.count_diskW=0
         pass
 
     def set_debug(self):
@@ -33,3 +44,11 @@ class ClockMMU(MMU):
     def get_total_page_faults(self):
         # TODO: Implement the method to get total page faults
         return -1
+
+
+# approx least recently used  initilaly set all the refernces to 1 then 
+# if the refenrce bit is 0, the page is chosen for replacemnt 
+# if the ref bit is 1, the bit is cleared and the clock hand moves to the next page
+
+# disk reads loading a page from disk 
+# disk writes saving a modified page back to disk before replacing it 
