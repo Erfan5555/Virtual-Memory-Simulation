@@ -27,20 +27,44 @@ class ClockMMU(MMU):
         self.debug_mode = False
     
 
+    def clock_first_pass(self,page_number):
 
+            current = self.frames[self.clock_tip]
+            if current is None:
+                self.frames[self.clock_tip] = current.page_num
+                self.frames[self.clock_tip].ref_bit=1
+                self.count_diskR+=1
+                if self.debug_mode:
+                    print("loading page")
+                self.clock_tip=(self.clock_tip+1)% self.num_frames
+                return -1
+            else :
+                if current.ref_bit==0 and current.dirty== False:
+                    self.frames[self.clock_hand] = Page(page_number)
+                    self.frames[self.clock_hand].reference_bit = 1
+                    self.disk_reads += 1
+                    self.clock_hand = (self.clock_hand + 1) % self.num_frames
+                    return -1
+                else:
+                    current.reference_bit = 0
+                    self.clock_hand = (self.clock_hand + 1) % self.num_frames
+                    return +1
+    
+    def sec_clock_pass(self,page_number):
+        
+    
+    
     def clock(self,page_number):
-        starter=True
-        while starter:
-            current= self.frames[self.clock_tip]
+        
+        while True:
+            a= self.clock_first_pass(self,page_number)
+            if a== -1:
+                return
+            else:
+                a= self.sec_clock_pass(self,page_number)
 
-            if current.ref_bit ==0 or current is None:
-                if current:
-                    if current.dirty:
-                        self.count_diskR+=1
-                        if self.debug_mode:
-                            print("s")
-                    if self.debug_mode:
-                        print("evicted")
+            
+
 
 
 
