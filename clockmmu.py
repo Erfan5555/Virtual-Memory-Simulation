@@ -4,9 +4,10 @@ class page:
     def __init__(self,page_num):
         self.page_num = page_num
         self.ref_bit =0
+        self.dirty= False
 
     def __repr__(self):
-        return f"Page({self.page_number}, ref_bit={self.reference_bit})"
+        return f"Page({self.page_number}, ref_bit={self.reference_bit}, dirty={self.dirty})"
 
 
 class ClockMMU(MMU):
@@ -25,8 +26,26 @@ class ClockMMU(MMU):
     def reset_debug(self):
         self.debug_mode = False
     
-    def clock (self,page_number):
-        pass
+
+
+    def clock(self,page_number):
+        starter=True
+        while starter:
+            current= self.frames[self.clock_tip]
+
+            if current.ref_bit ==0 or current is None:
+                if current:
+                    if current.dirty:
+                        self.count_diskR+=1
+                        if self.debug_mode:
+                            print("s")
+                    if self.debug_mode:
+                        print("evicted")
+
+
+
+
+
 
     def read_memory(self, page_number):
 
@@ -36,13 +55,23 @@ class ClockMMU(MMU):
                     if self.debug_mode:
                         print("Read hit")
                     return
-            
+        self.page_faults+=1
         self.clock(page_number)
 
-
     def write_memory(self, page_number):
-        # TODO: Implement the method to write memory
-        pass
+
+        for page in self.frames:
+            if page and page.page_num == page_number:
+
+                page.ref_bit = 1 
+
+                page.dirty = True
+                if self.debug_mode:
+                    print(f"Write hit.")
+                return
+
+        self.page_faults+=1
+        self.clock(page_number)
 
 
 
