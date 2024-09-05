@@ -31,8 +31,6 @@ class ClockMMU(MMU):
         self.debug_mode = False
     
     def handle_empty (self, page_number,write,current):
-        # set the ref bit to 1 
-        # if its a write op set the dirty bit to treu - Check THIS WITH THE BOOK
         self.frames[self.clock_tip] = Page(page_number)
         self.frames[self.clock_tip].ref_bit = 1  
 
