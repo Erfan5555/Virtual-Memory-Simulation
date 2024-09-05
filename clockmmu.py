@@ -108,7 +108,7 @@ class ClockMMU(MMU):
 
                 page.dirty = True
                 if self.debug_mode:
-                    print(f"Write hit.")
+                    print("Write hit.")
                 return
 
         self.page_faults+=1
