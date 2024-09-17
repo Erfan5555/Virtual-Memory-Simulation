@@ -35,10 +35,8 @@ class RandMMU(MMU):
 
     def write_memory(self, page_number):
         # TODO: Implement the method to write memory
-        print("yes")
         for i in self.pagetable:
             if (i.pagenumber == page_number):
-                print("yes")
                 i.set_bit(1)
                 return
         self.load_page(page_number) 
