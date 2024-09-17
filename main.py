@@ -3,7 +3,7 @@ from lrummu import LruMMU
 from randmmu import RandMMU
 from mmu import MMU
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 import sys
 
@@ -110,9 +110,39 @@ def main():
     page_arr = set_up(input_file)
     print(page_arr)
     lru_diskr, lru_diskw,lru_events, lru_page =test_mmu("lru",page_arr,input_file)
-    plt.plot(page_arr,lru_page)
+    rand_diskr, rand_diskw, rand_events, rand_page = test_mmu("rand",page_arr,input_file)
+    clock_diskr, clock_diskw, clock_events, clock_page = test_mmu("clock",page_arr,input_file)
+
+    #Plotting graph for page fault 
+    plt.plot(page_arr,lru_page, label = "LRU",linestyle="-")
+    plt.plot(page_arr,rand_page, label = "RAND",linestyle="--")
+    plt.plot(page_arr,clock_page, label = "CLOCK",linestyle="dotted")
+    plt.xlabel("Page Fault Rate")
+    plt.xlabel("Memory Frames")
+    plt.title("Page fault rate comparison across the three different algorithms for swim.trace")
+    plt.legend()
+    plt.show()
+
+    #Plotting graph for Disk Reads
+    plt.plot(page_arr,lru_diskr, label = "LRU",linestyle="-")
+    plt.plot(page_arr,rand_diskr, label = "RAND",linestyle="--")
+    plt.plot(page_arr,clock_diskr, label = "CLOCK",linestyle="dotted")
+    plt.xlabel("Disk Reads")
+    plt.xlabel("Memory Frames")
+    plt.title("Disk Reads rate comparison across the three different algorithms for swim.trace")
+    plt.legend()
     plt.show()
     
+    #Plotting graph for Disk Writes
+
+    plt.plot(page_arr,lru_diskw, label = "LRU",linestyle="-")
+    plt.plot(page_arr,rand_diskw, label = "RAND",linestyle="--")
+    plt.plot(page_arr,clock_diskw, label = "CLOCK",linestyle="dotted")
+    plt.xlabel("Disk Writes")
+    plt.xlabel("Memory Frames")
+    plt.title("Disk Writes comparison across the three different algorithms for swim.trace")
+    plt.legend()
+    plt.show()
 
     # with open(input_file, 'r') as trace_file:
     #     for trace_line in trace_file:
